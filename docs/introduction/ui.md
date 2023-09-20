@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Das UI
 
-Auch wenn die Benutzeroberfläche (das UI) sehr übersichtlich und inuitiv aufgebaut ist, findest Du hier einen kurzen Überblick über die wichtigsten Komponenten:
+Auch wenn die Benutzeroberfläche (das UI) sehr übersichtlich und intuitiv aufgebaut ist, findest Du hier einen kurzen Überblick über die wichtigsten Komponenten:
 
 ![Screenshot](../../resources/screenshot.webp)
 
@@ -21,7 +21,14 @@ Ein Klick auf den Balken blendet die Details ein und aus, was auf einem Handy re
 
 ## Ladepunkt 
 
-Unterhalb der Übersicht findet sich der Ladepunkt (den man in der [Konfiguration](/docs/reference/configuration/loadpoints.md) bzw. bei der [Erstinstallation](/docs/installation/) mit `evcc configure` nennen kann, wie man möchte - oder wenn man mehrere hat, wie "Carport" und "Garage" o.ä.) - in diesem Beispiel ganz kreativ "Wallbox":
+Unterhalb der Übersicht findet sich der Ladepunkt - in diesem Beispiel ganz kreativ "Wallbox" genannt: 
+:::note
+
+Den Ladepunkt kann man in der [Konfiguration](/docs/reference/configuration/loadpoints.md) bzw. bei der [Erstinstallation](/docs/installation/) mit `evcc configure` nennen, wie man möchte - oder wenn man mehrere hat, wie "Carport" und "Garage" o.ä.) 
+
+:::
+
+
 
 ![ladepunkt](../../resources/ui/de/loadpoint.png) 
 
