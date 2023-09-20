@@ -2,80 +2,67 @@
 sidebar_position: 1
 ---
 
-# Einführung
+# Überschussladen - was ist das?
 
-evcc ermöglicht das Laden von Elektrofahrzeugen (EV) bedarfsgerecht zu steuern und den dazu benötigten Energiebezug zu optimieren. Es kann eine Photovoltaikanlage (PV) angebunden werden, um so viel selbsterzeugte Energie wie möglich ins EV zu laden, oder es können auch Anbieter mit dynamischen Strompreisen angebunden werden.
+_**PV Überschussladen**_ bedeutet, dass der selbst erzeugte Strom aus einer Photovoltaikanlage zum Laden von Batterien oder Geräten verwendet wird, anstatt ihn ins Netz einzuspeisen, um so den Eigenverbrauch zu erhöhen.  
+Wir reden hier natürlich primär von Elektroautos, aber genauso könnte man einen eScooter, ein eBike oder andere Geräte mit "Überschuss" laden.
+![evcc](../resources/evcc-hero.svg)
 
-Normalerweise muss die Wallbox dazu mit der bestehenden PV-Installation kompatibel, oft sogar vom selben Hersteller sein. evcc ermöglicht dies jedoch herstellerübergreifend und mit einer Vielzahl von Wallboxen, Strommessgeräten und PV-Wechselrichtern, ohne dass diese speziell dazu vorgesehen sein müssen.
 
-Dazu wird evcc auf einem System im lokalen Netzwerk installiert, so dass es mit allen notwendigen Geräten kommunizieren kann. evcc selbst arbeitet dabei vollständig lokal und benötigt selbst keine Cloud-Anbindung, wenn keine der angebundenen Komponenten dies erfordert. Die Software ist sehr genügsam, so dass ein einfaches NAS (Netzwerkspeichergerät) oder ein Kleinstcomputersystem wie z. B. ein Raspberry Pi (oder ähnliches) völlig ausreichen.
+## Was bedeutet "Überschuss"?
 
-![Screenshot](screenshot.webp)
+"That depends..." - aber ganz im Ernst, zunächst einmal ist "Überschuss" alles das, was man an PV-generiertem Strom gerade nicht im Haus verbraucht.  
+Im Detail kann man noch den in der eventuell vorhandenen Hausbatterie vorhandenen, gespeicherten PV-Strom in den "Überschuss" mit einbeziehen - oder sogar den im Netz vorhandenen erneuerbar erzeugten Strom, wobei man hier dann von "_netzdienlichem Laden_" spricht, um die Energiewende zu unterstützen.  
 
-## Funktionalitäten
+Und wie stellt man fest, was gerade nicht verbraucht wird - bzw. andersherum, wie stellt man fest, was verbraucht wird, zieht das von der aktuellen PV Leistung ab, um dann festzustellen, ob etwas übrig bleibt?
+Wie kann man bis zu einem bestimmten (Ent-)Ladestand die Hausbatterie mit einbeziehen?
 
-- Einfache und klare Benutzeroberfläche
-- Unterstützung von
-  - [Wallboxen und schaltbaren Steckdosen](/docs/devices/chargers)
-  - [Erzeugungsanlagen, Batteriespeichern und Energiemessgeräten (Zähler)](/docs/devices/meters)
-  - [Fahrzeugen](/docs/devices/vehicles)
-- [Plugins](/docs/reference/plugins) um nahezu beliebige Wallboxen / Zähler / Fahrzeuge hinzuzufügen: Modbus, HTTP, MQTT, Javascript, WebSockets und Shell Scripte
-- Status [Benachrichtigungen](/docs/reference/configuration/messaging) über [Telegram](https://telegram.org), [PushOver](https://pushover.net) und [viele mehr](https://containrrr.dev/shoutrrr/)
-- Datenanalyse mit [InfluxDB](https://www.influxdata.com) und [Grafana](https://grafana.com/grafana/)
-- Stufenlose Regelung der Ladeströme mit unterstützten Wallboxen (z.b. bei smartWB als [OLC](https://board.evse-wifi.de/viewtopic.php?f=16&t=187) bezeichnet)
-- REST- und MQTT-[APIs](/docs/reference/api) zur Integration in andere Heimautomationssysteme (z.B. [HomeAssistant](https://github.com/evcc-io/evcc-hassio-addon))
+### Sensoren und Messfühler
 
-## Anforderungen
+Damit das funktionieren kann, muss ein Steuerungssystem (egal welches)
 
-Um evcc zu verwenden, wird mindestens folgendes benötigt:
+1. Messen, was die PV gerade produziert
+2. Messen, was im Haus verbraucht wird
+3. (optional) Den Ladestand der Hausbatterie messen
+4. Die Wallbox steuern können
 
-- eine unterstützte [Wallbox oder schaltbare Steckdose](/docs/devices/chargers)
-- ein unterstütztes [Messgerät](/docs/devices/meters) am Hausanschluss, oder alternativ ein unterstützter PV-Wechselrichter bzw. anderes Messgerät, welches die aktuelle Erzeugungsleistung misst
-- ein unterstütztes System auf welchem evcc läuft
+Wenn man eine PV Anlage hat, sollte der Wechselrichter mindestens Daten über die erzeugte Leistung bereitstellen, viele haben zusätzlich auch eine Messeinrichtung, die den Verbrauch im Haus (und die Einspeisung ins Netz) am Eingang des "Sicherungskastens" bzw. am Hausanschluss misst. 
 
-Optional:
+### Steuerbare Wallbox
 
-- ein oder mehrere unterstützte [Fahrzeuge](/docs/devices/vehicles), deren Ladezustand abgerufen wird
-- weitere unterstützte Wallboxen, schaltbare Steckdosen, PV-Erzeugungs- und Batteriespeichersysteme
-- ein unterstütztes [Energiemanagementsystem](/docs/reference/configuration/hems) (wie z. B. SMA Sunny Home Manager) oder ein dynamischer Stromtarif
+Jetzt benötigt man noch eine Wallbox, die in der Ladeleistung gesteuert werden kann. Warum? 
+Eine "dumme" Wallbox, die nur an/aus kann, wird immer mit dem Maximum laden, weil sie ja dafür gebaut ist - 11 bzw 22kW bei typischen drei-phasigen ("Drehstrom") Wallboxen bzw 3,6/7,2kW bei einphasigen Wallboxen.
 
-Über diese Wege sind wir zu erreichen:
-
-- Support, Konfiguration, Fragen zu Geräten: [Community Support Forum](https://github.com/evcc-io/evcc/discussions)
-- Chat zu Entwicklungsthemen: [Slack](https://evcc.io/slack).
+Aber soviel Leistung muss man erstmal übrig haben (wir reden ja von "**Überschuss**-Laden") - bei kleineren PV-Anlagen oder im Winter / an bedeckten Tagen wird ohne eine Steuerung immer Strom aus dem Netz bezogen werden (müssen), wenn die Wallbox nicht steuerbar ist.
+Zum Glück sind die meisten heute erhältlichen Wallboxen auf die eine oder andere Art steuerbar.
 
 :::note
-evcc kommt ohne jede Art von Garantie. Du verwendest die Software auf eigenes Risiko. Es liegt in deiner Verantwortung, dass evcc so läuft wie es beabsichtigt ist.
+
+Nur der Vollständigkeit halber: Die allereinfachste Methode ist natürlich der Eiweiß-Computer... mit anderen Worten, man beobachtet die PV Erzeugung und steuert _selbst und manuell_, dass man nur bei ausreichend Sonne lädt, wenn man nicht gleichzeitig kocht, die Waschmaschine läuft, usw. und startet/stoppt das Laden dementsprechend am Auto oder der Wallbox.  
+Aber - wer will das schon?
+
 :::
 
-## Videos
+## Proprietäre (Hersteller-eigene) Lösungen
 
-### Vortrag Augsburger Linux Infotag 2023
+Viele am Markt erhältliche Lösungen arbeiten nur mit Komponenten desselben Herstellers oder wenigen kompatiblen zusammen (Wallbox und Wechselrichter, ggf. Batterie müssen vom gleichen Hersteller sein) oder aber sind sehr teuer, da sie durch zusätzliche Komponenten ergänzt werden müssen.  
+Ein Beispiel dafür sind "smarte Wallboxen" bzw. Wallboxen, die speziell auf Überschussladen ausgelegt sind.  
+Auch diese müssen den Verbrauch und die Erzeugung messen können - und werden daher meist als Paket mit Messfühlern und einer Sendeeinheit verkauft. Diese stellt dann die Messdaten im Haus-LAN/WLAN oder über ein eigenes WLAN zwischen Wallbox und Messfühler/Sendeeinheit der Wallbox zur Verfügung.  
+Diese zusätzlichen Komponenten machen eine solche Wallbox deutlich teurer - obwohl oft schon alle (oder zumindest die meisten) Daten zur Verfügung stehen.
 
-[Michael](https://github.com/naltatis) stellt das Projekt vor, erzählt was zum Arbeitsalltag und zur Finanzierung des Projekts.
+## Open Source - evcc 
 
-[![YouTube LIT2023](youtube_linux_infotag.webp)](https://www.youtube.com/watch?v=qN8JwBWOlzw)
+Hier kommt evcc ins Spiel: Wir sind keine Freunde von **geschlossenen Ökosystemen, Clouddiensten** und **teuren Energiemanagementsystemen**.  
+evcc ist eine lokale Lösung, die auf deiner eigenen Hardware läuft und deine Geräte intelligent zusammenspielen lässt - _**egal von welchem Hersteller**_.
 
-### verdrahtet: PV Überschussladen mit evcc
+Bereits heute werden zahlreiche Hersteller von Wallboxen unterstützt, und evcc ermöglicht es, die Stromstärke zu steuern, mit der das Auto geladen wird. Das heißt, wenn viel Sonnenstrom erzeugt wird, erlaubt evcc, das angeschlossene Auto mit hoher Leistung zu laden. Wird weniger Strom erzeugt, verlangsamt oder pausiert evcc den Ladevorgang.
 
-Behandelt die Themen evcc Einrichtung und Grundlagen, Integration mit ioBroker und die Einbindung eines Homematic Schalters.
+![evcc schema](../resources/evcc-schema.svg)
 
-[![YouTube verdrahtet](youtube_verdrahtet.webp)](https://youtu.be/6JxktkEaZ2o)
+Damit evcc die Ladung bestmöglich regeln kann, ist ein Messgerät (= auslesbarer Energiezähler) am Netzanschluss der Hausinstallation notwendig. Durch dieses Messgerät kennt evcc den momentanen Energieüberschuss und kann die Ladeleistung kontinuierlich anpassen. Das Gute ist, dass in fast jeder vorhandenen PV-Anlage ein entsprechendes Gerät bereits vorhanden ist oder einfach nachgerüstet werden kann.
 
-### haus-automatisierung.com: PV-Überschuss ins E-Auto laden
+Ist ein von evcc unterstütztes Elektrofahrzeug eingerichtet, kann sein momentaner Batterieladezustand und die Reichweite angezeigt und in der Ladeplanung berücksichtigt werden. Auch wenn die Sonne ab und an mal nicht so viel scheint, bleibt so die Mobilität sichergestellt.
 
-Behandelt die Themen evcc Einrichtung, Grundlagen und Custom Plugins, Steuerung über MQTT und ioBroker, unterschiedliche Installationsmöglichkeiten.
+Und noch etwas kann evcc: Ist ein unterstützter Batteriespeicher vorhanden, wird auch dessen Ladezustand gesteuert und mit Sonnenstrom versorgt.
 
-[![YouTube Haus Automatisierung](youtube_hausautomatisierung.webp)](https://youtu.be/93C47QUjomQ)
 
-## Blogartikel
-
-### hobbyblogging.de
-
-- Einführung in die Grundkonzepte: [evcc - Was soll das sein?](https://hobbyblogging.de/evcc-was-soll-das-sein)
-- Einrichtung mit Balkonsolar und smarten Steckdosen: [evcc installieren – So einfach geht’s!](https://hobbyblogging.de/evcc-installieren)
-
-### elefacts.de
-
-- Grundlagen, Detaillierte Anleitung für Raspberry Pi Installation, Fernzugriff via Fritz!Box & DynDNS: [evcc Anleitung für intelligentes PV Überschussladen mit vielen Wallboxen](https://www.elefacts.de/test-206-evcc_anleitung_fuer_intelligentes_pv_ueberschussladen_mit_vielen_wallboxen)
-- InfluxDB & Grafana: [Von evcc erfasste Daten langfristig speichern und aufbereiten](https://www.elefacts.de/test-208-von_evcc_erfasste_daten_langfristig_speichern_und_aufbereiten)

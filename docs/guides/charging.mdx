@@ -64,7 +64,7 @@ Die Hausbatterie wird völlig ignoriert, denn das EV soll ja so schnell wie mög
 
 - evcc regelt den Ladestrom je nach verfügbarem PV Überschuss
 - Der Ladevorgang wird immer nur dann gestartet, wenn über eine definierte Dauer ([Standard: 1 Minute](/docs/reference/configuration/loadpoints#enable)) der benötigte PV Überschuß vorhanden ist.
-- Der Ladevorgang wird immer unterbrochen, wenn über eine definierte Dauer ([Standard: 1 Minute](/docs/reference/configuration/loadpoints#disable)) nicht genügend Strom für eine [Mindestleistung](#ich-habe-pv-überschuss-aber-das-auto-lädt-nicht-warum) vorhanden ist.
+- Der Ladevorgang wird immer unterbrochen, wenn über eine definierte Dauer ([Standard: 3 Minuten](/docs/reference/configuration/loadpoints#disable)) nicht genügend Strom für eine [Mindestleistung](#ich-habe-pv-überschuss-aber-das-auto-lädt-nicht-warum) vorhanden ist.
 - Zwischen dem [Invervall des Regelzyklus](/docs/reference/configuration/interval) kann es jedoch zu Schwankungen kommen, so dass weniger Überschuss vorhanden ist als zum Regelzeitpunkt. D.h. falls hier zu wenig PV Überschuss vorhanden ist, muss der "fehlende Strom" irgendwo her kommen. Und wenn die Hausbatterie noch nicht "leer" ist, springt das HEMS ein und zieht Strom aus der Hausbatterie um den Netzschluss Punkt auf 0 auszuregeln. Dies kann nicht verhindert werden!
 - Zum Zeitpunkt der Regelung in evcc, kann mit
   - [prioritySoC](/docs/reference/configuration/site#prioritysoc) der Hausbatterie bis zu einem definierten SoC Vorrang gegeben werden. Danach wird Ladestrom als verfügbarer PV Überschuss interpretiert.
