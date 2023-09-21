@@ -22,11 +22,12 @@ Wie kann man bis zu einem bestimmten (Ent-)Ladestand die Hausbatterie mit einbez
 Damit das funktionieren kann, muss ein Steuerungssystem (egal welches)
 
 1. Messen, was die PV gerade produziert
-2. Messen, was im Haus verbraucht wird
+2. Messen, was im Haus verbraucht wird  
+_(faktisch wird das erreicht, indem einfach die Einspeisung ins Netz gemessen wird)_
 3. (optional) Den Ladestand der Hausbatterie messen
 4. Die Wallbox steuern können
 
-Wenn man eine PV Anlage hat, sollte der Wechselrichter mindestens Daten über die erzeugte Leistung bereitstellen, viele haben zusätzlich auch eine Messeinrichtung, die den Verbrauch im Haus (und die Einspeisung ins Netz) am Eingang des "Sicherungskastens" bzw. am Hausanschluss misst. 
+Wenn man eine PV Anlage hat, sollte der Wechselrichter mindestens Daten über die erzeugte Leistung bereitstellen, viele haben zusätzlich auch eine Messeinrichtung, welche die Einspeisung ins Netz (und damit den Verbrauch im Haus) am Eingang des "Sicherungskastens" bzw. am Hausanschluss misst. 
 
 ### Steuerbare Wallbox
 
